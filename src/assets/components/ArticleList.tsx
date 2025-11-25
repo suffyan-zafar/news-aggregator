@@ -8,6 +8,7 @@ interface ArticleListProps {
   articles: Article[];
   isLoading: boolean;
   isError: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errors?: any[];
 }
 
