@@ -1,0 +1,49 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2 — Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      # Step 3 — Install dependencies
+      - name: Install dependencies
+        run: npm install  --legacy-peer-deps
+
+      # Step 4 — Build app
+      - name: Build app
+        run: npm run build
+
+      # Step 5 — Run tests
+      # - name: Run tests
+      #   run: npm test
+
+      # Step 6 — Deploy to EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}       # 3.215.177.138
+          username: ${{ secrets.EC2_USER }}   # ubuntu
+          key: ${{ secrets.EC2_KEY }}         # Private SSH key
+          script: |
+            echo "🔐 Connected to EC2..."
+            cd ${{ secrets.EC2_PATH }}         # e.g., /var/www/myapp
+            echo "🔧 Making deploy script executable..."
+            chmod +x scripts/deploy.sh
+            echo "🏃 Running deployment script..."
+            bash scripts/deploy.sh
