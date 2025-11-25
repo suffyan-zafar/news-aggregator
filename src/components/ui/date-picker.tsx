@@ -11,9 +11,7 @@ import {
 import { Button } from "./button"
 import { cn } from "../../lib/utils"
 import { Calendar } from "./calendar"
-import React from "react"
 import { DateRange } from "react-day-picker"
-"use client"
 
 
 interface DatePickerWithRangeProps {
